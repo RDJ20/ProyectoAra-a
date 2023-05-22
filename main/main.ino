@@ -53,6 +53,7 @@ void loop() {
 //////////////////////segundo movimiento
 
   supportA();
+  upB();
 
   
   delay(1000);
