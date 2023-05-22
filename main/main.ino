@@ -38,7 +38,7 @@ int medioIZ = 60;
 int finalDER = 90; //0
 int finalIZ = 90; //180
 void loop() {
-
+//////////////////////primer movimiento
   //GRUPO A 
   // Fase movimiento
   miServo[1].write(base+A);
@@ -52,7 +52,26 @@ void loop() {
   miServo[13].write(finalDER-A);
   miServo[5].write(finalIZ+A);
   miServo[15].write(finalDER-A);
+
+  // GRUPO B
+  // Fase apoyo
+  miServo[4].write(base-A);
+  miServo[2].write(base+A); //Inverso BASE
+  miServo[6].write(base-A);
+
+  miServo[10].write(medioIZ-A);
+  miServo[8].write(medio+A); //Inverso Medio
+  miServo[12].write(medioIZ-A);
+
+  miServo[16].write(finalIZ+A);
+  miServo[14].write(finalDER-A);
+  miServo[18].write(finalIZ+A);
+
   delay(1000);
+
+//////////////////////segundo movimiento
+
+  //GRUPO A 
   // Fase apoyo
   miServo[1].write(base-A);
   miServo[5].write(base+A); //Inverso BASE
@@ -65,7 +84,6 @@ void loop() {
   miServo[13].write(finalDER+A);
   miServo[5].write(finalIZ-A);
   miServo[15].write(finalDER+A);
-   delay(1000);
  
   //GRUPO B 
   // Fase movimiento
@@ -80,20 +98,8 @@ void loop() {
   miServo[16].write(finalIZ-A);
   miServo[14].write(finalDER+A);
   miServo[18].write(finalIZ-A);
+  
   delay(1000);
-  // Fase apoyo
-  miServo[4].write(base-A);
-  miServo[2].write(base+A); //Inverso BASE
-  miServo[6].write(base-A);
-
-  miServo[10].write(medioIZ-A);
-  miServo[8].write(medio+A); //Inverso Medio
-  miServo[12].write(medioIZ-A);
-
-  miServo[16].write(finalIZ+A);
-  miServo[14].write(finalDER-A);
-  miServo[18].write(finalIZ+A);
-   delay(1000);
 
 }
 
