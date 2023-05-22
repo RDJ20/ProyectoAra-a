@@ -2,7 +2,7 @@
 #include <Servo.h>
 
 Servo miServo[19];
-int A = 90;
+
 
 void setup() {
   // Base Derecha
@@ -31,14 +31,70 @@ void setup() {
   miServo[18].attach(44);
 }
 
+int A = 5;
+int base = 90;
+int medio = 120;
+int medioIZ = 60;
+int finalDER = 90; //0
+int finalIZ = 90; //180
 void loop() {
- BaseDerecha(90);
- BaseIzquierda(90);
- MedioDerecha(120);//180
- MedioIzquierda(60);//0
- FinalDerecha(90);//0
- FinalIzquierda(90);// 180
- delay(1000);
+
+  //GRUPO A 
+  // Fase movimiento
+  miServo[1].write(base+A);
+  miServo[5].write(base-A); //Inverso BASE
+  miServo[3].write(base+A);
+
+  miServo[7].write(medio+A);
+  miServo[11].write(medioIZ-A); //Inverso Medio
+  miServo[9].write(medio+A);
+
+  miServo[13].write(finalDER-A);
+  miServo[5].write(finalIZ+A);
+  miServo[15].write(finalDER-A);
+  delay(1000);
+  // Fase apoyo
+  miServo[1].write(base-A);
+  miServo[5].write(base+A); //Inverso BASE
+  miServo[3].write(base-A);
+
+  miServo[7].write(medio-A);
+  miServo[11].write(medioIZ+A); //Inverso Medio
+  miServo[9].write(medio-A);
+
+  miServo[13].write(finalDER+A);
+  miServo[5].write(finalIZ-A);
+  miServo[15].write(finalDER+A);
+   delay(1000);
+ 
+  //GRUPO B 
+  // Fase movimiento
+  miServo[4].write(base+A);
+  miServo[2].write(base-A); //Inverso BASE
+  miServo[6].write(base+A);
+
+  miServo[10].write(medioIZ+A);
+  miServo[8].write(medio-A); //Inverso Medio
+  miServo[12].write(medioIZ+A);
+
+  miServo[16].write(finalIZ-A);
+  miServo[14].write(finalDER+A);
+  miServo[18].write(finalIZ-A);
+  delay(1000);
+  // Fase apoyo
+  miServo[4].write(base-A);
+  miServo[2].write(base+A); //Inverso BASE
+  miServo[6].write(base-A);
+
+  miServo[10].write(medioIZ-A);
+  miServo[8].write(medio+A); //Inverso Medio
+  miServo[12].write(medioIZ-A);
+
+  miServo[16].write(finalIZ+A);
+  miServo[14].write(finalDER-A);
+  miServo[18].write(finalIZ+A);
+   delay(1000);
+
 }
 
 
