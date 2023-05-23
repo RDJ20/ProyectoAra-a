@@ -1,4 +1,3 @@
-
 #include <Servo.h>
 
 Servo miServo[19];
@@ -36,92 +35,107 @@ void setup() {
   // miServo[18].attach(44);
 }
 
-int A = 5;
+void smoothMovement(int servo, int posicionFinal, int duracion) {
+  int anguloInicial = miServo[servo].read();  // Ángulo inicial del servo
+  int pasos = 100;                     // Número de pasos para la interpolación
+  
+  for (int i = 0; i <= pasos; i++) {
+    float t = float(i) / float(pasos);  // Tiempo normalizado
+    float anguloInterpolado = anguloInicial + (posicionFinal - anguloInicial) * (-0.5 * (cos(PI * t) - 1));  // Interpolación utilizando easeInOutSine
+    miServo[servo].write(anguloInterpolado);  // Mover el servo al ángulo interpolado
+    delay(duracion / pasos);  // Espera entre pasos
+  }
+}
+
+int A = 15;
+int velocidad = 1000;
 int base = 90;
 int medio = 120;
 int medioIZ = 60;
 int finalDER = 90; //0
 int finalIZ = 90; //180
+int levantar = 30;
+int movTime = 2000;
 void loop() {
-
 //////////////////////primer movimiento
   upA();
-  supportB();
 
-  delay(1000);
-
-//////////////////////segundo movimiento
-
+  delay(velocidad);
   supportA();
-  upB();
+ 
 
+  delay(velocidad);
+
+  upB();
   
-  delay(1000);
+  delay(velocidad);
+
+  supportB();
+ 
+  delay(velocidad);
 
 }
-
 
 void upA() {
   //GRUPO A 
   // Fase movimiento
-  miServo[1].write(base+A);
-  miServo[5].write(base-A); //Inverso BASE
-  miServo[3].write(base+A);
+  smoothMovement(1, base+A, movTime);
+  smoothMovement(5, base-A, movTime); //Inverso BASE
+  smoothMovement(3, base+A, movTime);
 
-  miServo[7].write(medio+A);
-  miServo[11].write(medioIZ-A); //Inverso Medio
-  miServo[9].write(medio+A);
+  smoothMovement(7, medio+A+levantar, movTime);
+  smoothMovement(11, medioIZ-A-levantar, movTime); //Inverso Medio
+  smoothMovement(9, medio+A+levantar, movTime);
 
-  miServo[13].write(finalDER-A);
-  miServo[5].write(finalIZ+A);
-  miServo[15].write(finalDER-A);
+  smoothMovement(13, finalDER-A, movTime);
+  smoothMovement(5, finalIZ+A, movTime);
+  smoothMovement(15, finalDER-A, movTime);
 }
 
 void supportA() {
   //GRUPO A 
   // Fase apoyo
-  miServo[1].write(base-A);
-  miServo[5].write(base+A); //Inverso BASE
-  miServo[3].write(base-A);
+  smoothMovement(1, base, movTime);
+  smoothMovement(5, base, movTime); //Inverso BASE
+  smoothMovement(3, base, movTime);
 
-  miServo[7].write(medio-A);
-  miServo[11].write(medioIZ+A); //Inverso Medio
-  miServo[9].write(medio-A);
+  smoothMovement(7, medio, movTime);
+  smoothMovement(11, medioIZ, movTime); //Inverso Medio
+  smoothMovement(9, medio, movTime);
 
-  miServo[13].write(finalDER+A);
-  miServo[5].write(finalIZ-A);
-  miServo[15].write(finalDER+A);
+  smoothMovement(13, finalDER, movTime);
+  smoothMovement(5, finalIZ, movTime);
+  smoothMovement(15, finalDER, movTime);
 }
 
 void upB() {
-  //GRUPO B 
+ // GRUPO B 
   // Fase movimiento
-  miServo[4].write(base+A);
-  miServo[2].write(base-A); //Inverso BASE
-  miServo[6].write(base+A);
+  smoothMovement(4, base+A, movTime);
+  smoothMovement(2, base-A, movTime); //Inverso BASE
+  smoothMovement(6, base+A, movTime);
 
-  miServo[10].write(medioIZ+A);
-  miServo[8].write(medio-A); //Inverso Medio
-  miServo[12].write(medioIZ+A);
+  smoothMovement(10, medioIZ-A-levantar, movTime);
+  smoothMovement(8, medio+A+levantar, movTime); //Inverso Medio
+  smoothMovement(12, medioIZ-A-levantar, movTime);
 
-  miServo[16].write(finalIZ-A);
-  miServo[14].write(finalDER+A);
-  miServo[18].write(finalIZ-A);
+  smoothMovement(16, finalIZ-A, movTime);
+  smoothMovement(14, finalDER+A, movTime);
+  smoothMovement(18, finalIZ-A, movTime);
 }
 
 void supportB() {
   // GRUPO B
-  // Fase apoyo
-  miServo[4].write(base-A);
-  miServo[2].write(base+A); //Inverso BASE
-  miServo[6].write(base-A);
+  //Fase apoyo
+  smoothMovement(4, base, movTime);
+  smoothMovement(2, base, movTime); //Inverso BASE
+  smoothMovement(6, base, movTime);
 
-  miServo[10].write(medioIZ-A);
-  miServo[8].write(medio+A); //Inverso Medio
-  miServo[12].write(medioIZ-A);
+  smoothMovement(10, medioIZ, movTime);
+  smoothMovement(8, medio, movTime); //Inverso Medio
+  smoothMovement(12, medioIZ, movTime);
 
-  miServo[16].write(finalIZ+A);
-  miServo[14].write(finalDER-A);
-  miServo[18].write(finalIZ+A);
+  smoothMovement(16, finalIZ, movTime);
+  smoothMovement(14, finalDER, movTime);
+  smoothMovement(18, finalIZ, movTime);
 }
-
