@@ -1,6 +1,6 @@
 #include <Servo.h>
 
-Servo miServo[19];
+Servo miServo[32];
 
 void setup() {
   int servos[] = {22, 28, 34, 23, 46, 40, 24, 30, 36, 25, 39, 42, 26, 32, 38, 27, 48, 44};
@@ -14,9 +14,13 @@ void smoothMovement(
   int servo1, int servo2, int servo3,
   int servo4, int servo5, int servo6,
   int servo7, int servo8, int servo9,
+  int servo10,
+  // int servo11,
   int posicionFinal1, int posicionFinal2, int posicionFinal3, 
   int posicionFinal4, int posicionFinal5, int posicionFinal6, 
   int posicionFinal7, int posicionFinal8, int posicionFinal9,
+  int posicionFinal10,
+  // int posicionFinal11,
   int duracion
 ) {
   int anguloInicial1 = miServo[servo1].read(); 
@@ -29,7 +33,9 @@ void smoothMovement(
   
   int anguloInicial7 = miServo[servo7].read(); 
   int anguloInicial8 = miServo[servo8].read(); // 90
-  int anguloInicial9 = miServo[servo9].read(); // Ángulo inicial del servo
+  int anguloInicial9 = miServo[servo9].read();
+  int anguloInicial10 = miServo[servo10].read(); 
+  // int anguloInicial11 = miServo[servo10].read();// Ángulo inicial del servo
   int pasos = 100;  // Número de pasos para la interpolación
   
   for (int i = 0; i <= pasos; i++) {
@@ -44,8 +50,10 @@ void smoothMovement(
     
     float anguloInterpolado7 = anguloInicial7 + (posicionFinal7 - anguloInicial7) * (-0.5 * (cos(PI * t) - 1));
     float anguloInterpolado8 = anguloInicial8 + (posicionFinal8 - anguloInicial8) * (-0.5 * (cos(PI * t) - 1));
-    float anguloInterpolado9 = anguloInicial9 + (posicionFinal9 - anguloInicial9) * (-0.5 * (cos(PI * t) - 1));  // Interpolación utilizando easeInOutSine
-    
+    float anguloInterpolado9 = anguloInicial9 + (posicionFinal9 - anguloInicial9) * (-0.5 * (cos(PI * t) - 1));
+    float anguloInterpolado10 = anguloInicial10 + (posicionFinal10 - anguloInicial10) * (-0.5 * (cos(PI * t) - 1));  // Interpolación utilizando easeInOutSine
+    // float anguloInterpolado11 = anguloInicial11 + (posicionFinal11 - anguloInicial11) * (-0.5 * (cos(PI * t) - 1));
+
     miServo[servo1].write(anguloInterpolado1); 
     miServo[servo2].write(anguloInterpolado2); 
     miServo[servo3].write(anguloInterpolado3); 
@@ -57,46 +65,38 @@ void smoothMovement(
     miServo[servo7].write(anguloInterpolado7); 
     miServo[servo8].write(anguloInterpolado8); 
     miServo[servo9].write(anguloInterpolado9);
-    
+    miServo[servo10].write(anguloInterpolado10);
+    // miServo[servo11].write(anguloInterpolado11);
     // Mover el servo al ángulo interpolado
     delay(duracion / pasos);  // Espera entre pasos
   }
 }
-
-<<<<<<< HEAD
-=======
-void smoothMovement(int servo, int posicionFinal, int duracion) {
-  int anguloInicial = miServo[servo].read();  // Ángulo inicial del servo
-  int pasos = 100;                     // Número de pasos para la interpolación
-  
-  for (int i = 0; i <= pasos; i++) {
-    float t = float(i) / float(pasos);  // Tiempo normalizado
-    float anguloInterpolado = anguloInicial + (posicionFinal - anguloInicial) * (-0.5 * (cos(PI * t) - 1));  // Interpolación utilizando easeInOutSine
-    miServo[servo].write(anguloInterpolado);  // Mover el servo al ángulo interpolado
-    delay(duracion / pasos);  // Espera entre pasos
-  }
-}
-
->>>>>>> cf24e1f42afb08622b241008a69e7dedb17a3c28
+int VelocidadFinal=100;
 int A = 15;
-int velocidad = 1000;
+int velocidad = VelocidadFinal;
 int base = 90;
-int medio = 120;
-int medioIZ = 60;
-<<<<<<< HEAD
+int baseespejo1=180;
+int medio = 110;
+int medioIZ = 70;
 int finalDER = 90; // 0
 int finalIZ = 90; // 180
 int levantar = 30;
-int movTime = 1000;
+float porcentajeBase = 0.9; //Sirve para multiplicarlo y que el movimiento de la base no sea tan fuerte en base a los grados que se quieren mover (A)
+int movTime = VelocidadFinal;
 
 void loop() {
-  BaseDerecha(90);
-  BaseIzquierda(90);
-  MedioDerecha(90); // 180
-  MedioIzquierda(90); // 0
-  FinalDerecha(0); // 0
-  FinalIzquierda(180); // 180
-  delay(1000);
+ moveUpGroupA();
+ moveDownGroupA();
+ moveUpGroupB();
+ moveDownGroupB();
+
+// BaseDerecha(90);
+//  BaseIzquierda(90);
+//  MedioDerecha(140);//180
+//  MedioIzquierda(40);//0
+//  FinalDerecha(120);//0
+//  FinalIzquierda(60);// 180
+//  delay(1000);
 }
 
 void moveUpGroupA() {
@@ -104,9 +104,21 @@ void moveUpGroupA() {
     1, 5, 3,
     7, 11, 9,
     13, 17, 15,
-    base + A, base - A, base + A,
-    medio + A + levantar, medioIZ - A - levantar, medio + A + levantar,
-    finalDER - A, finalIZ + A, finalDER - A,
+    //grupo diferente
+    2,
+
+    //termina
+    base ,           
+    base - A*porcentajeBase,               
+    base ,
+    medio   + A + levantar, 
+    medioIZ - A - levantar, 
+    medio   + A + levantar,
+    finalDER - A,         finalIZ ,            finalDER - A,
+    //grupo diferente
+    base -A,
+
+    //termina
     movTime
   );
 }
@@ -117,77 +129,66 @@ void moveDownGroupA() {
   smoothMovement(
     1, 5, 3,
     7, 11, 9,
-    13, 17, 15,
-    base, base, base,
+    13, 17, 15, 
+    //grupo diferente
+    0,
+
+    // termina
+    base, base - A*porcentajeBase, base,
     medio, medioIZ, medio,
     finalDER, finalIZ, finalDER,
+      //grupo diferente
+    base+A,
+
+    // termina
     movTime
   );
-=======
-int finalDER = 90; //0
-int finalIZ = 90; //180
-int levantar = 30;
-int movTime = 2000;
-void loop() {
-//////////////////////primer movimiento
-  upA();
-
-  delay(velocidad);
-  supportA();
- 
-
-  delay(velocidad);
-
-  upB();
-  
-  delay(velocidad);
-
-  supportB();
- 
-  delay(velocidad);
-
->>>>>>> cf24e1f42afb08622b241008a69e7dedb17a3c28
 }
 
 void moveUpGroupB() {
   // GRUPO B
   // Fase movimiento
-<<<<<<< HEAD
   smoothMovement(
     4, 2, 6,
     10, 8, 12,
     16, 14, 18,
-    base - A, base + A, base - A,
-    medioIZ - A - levantar, medio + A + levantar, medioIZ - A - levantar,
-    finalIZ - A, finalDER + A, finalIZ - A,
+    //grupo Diferente
+    5,
+
+    //termina
+    base  , 
+    base + A*porcentajeBase, 
+    base ,
+    medioIZ - A - levantar, 
+    medio + A + levantar, 
+    medioIZ - A - levantar,
+    finalIZ - A, 
+    finalDER , 
+    finalIZ - A,
+    //grupo Diferente
+    base +A, 
+    //termina
     movTime
   );
-=======
-  smoothMovement(1, base+A, movTime);
-  smoothMovement(5, base-A, movTime); //Inverso BASE
-  smoothMovement(3, base+A, movTime);
-
-  smoothMovement(7, medio+A+levantar, movTime);
-  smoothMovement(11, medioIZ-A-levantar, movTime); //Inverso Medio
-  smoothMovement(9, medio+A+levantar, movTime);
-
-  smoothMovement(13, finalDER-A, movTime);
-  smoothMovement(5, finalIZ+A, movTime);
-  smoothMovement(15, finalDER-A, movTime);
->>>>>>> cf24e1f42afb08622b241008a69e7dedb17a3c28
 }
 
 void moveDownGroupB() {
   // GRUPO B
   // Fase apoyo
-<<<<<<< HEAD
   smoothMovement(
     4, 2, 6,
     10, 8, 12,
-    16, 14, 18,
-    base, base, base,
+    16, 14, 18, 
+    //grupo diferente
+    0, 
+    
+    //termina
+    base, base + A*porcentajeBase, base,
     medioIZ, medio, medioIZ,
     finalIZ, finalDER, finalIZ,
+    //grupo diferente
+    base - A,
+    //termina
     movTime
   );
 }
@@ -227,49 +228,3 @@ void FinalIzquierda(int inclinacion) {
   miServo[17].write(inclinacion);
   miServo[18].write(inclinacion);
 }
-=======
-  smoothMovement(1, base, movTime);
-  smoothMovement(5, base, movTime); //Inverso BASE
-  smoothMovement(3, base, movTime);
-
-  smoothMovement(7, medio, movTime);
-  smoothMovement(11, medioIZ, movTime); //Inverso Medio
-  smoothMovement(9, medio, movTime);
-
-  smoothMovement(13, finalDER, movTime);
-  smoothMovement(5, finalIZ, movTime);
-  smoothMovement(15, finalDER, movTime);
-}
-
-void upB() {
- // GRUPO B 
-  // Fase movimiento
-  smoothMovement(4, base+A, movTime);
-  smoothMovement(2, base-A, movTime); //Inverso BASE
-  smoothMovement(6, base+A, movTime);
-
-  smoothMovement(10, medioIZ-A-levantar, movTime);
-  smoothMovement(8, medio+A+levantar, movTime); //Inverso Medio
-  smoothMovement(12, medioIZ-A-levantar, movTime);
-
-  smoothMovement(16, finalIZ-A, movTime);
-  smoothMovement(14, finalDER+A, movTime);
-  smoothMovement(18, finalIZ-A, movTime);
-}
-
-void supportB() {
-  // GRUPO B
-  //Fase apoyo
-  smoothMovement(4, base, movTime);
-  smoothMovement(2, base, movTime); //Inverso BASE
-  smoothMovement(6, base, movTime);
-
-  smoothMovement(10, medioIZ, movTime);
-  smoothMovement(8, medio, movTime); //Inverso Medio
-  smoothMovement(12, medioIZ, movTime);
-
-  smoothMovement(16, finalIZ, movTime);
-  smoothMovement(14, finalDER, movTime);
-  smoothMovement(18, finalIZ, movTime);
-}
->>>>>>> cf24e1f42afb08622b241008a69e7dedb17a3c28
