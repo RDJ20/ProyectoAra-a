@@ -165,8 +165,8 @@ int movTime = VelocidadFinal;
 int direccion1= -1;
 
 void loop() {
- DePie();
-
+ //DePie();
+ Avanzar();
 
 
 }
@@ -182,6 +182,7 @@ void Avanzar(){
  moveDownGroupA();
  moveUpGroupB();
  moveDownGroupB();
+ 
 }
 
 void moveUpGroupA() {
